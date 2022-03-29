@@ -1,0 +1,12 @@
+{
+  description = "System config for @ptkato";
+
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+  outputs = { self, nixpkgs }: {
+    nixosConfigurations.ptkato-desktop = nixpkgs.lib.nixosSystem {
+      system  = "x86_64-linux";
+      modules = [ ./configuration.nix ];
+    };
+  };
+}
