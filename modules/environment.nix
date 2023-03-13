@@ -23,7 +23,16 @@
     pulseaudio.enable       = true;
     pulseaudio.support32Bit = true;
     pulseaudio.package      = pkgs.pulseaudioFull;
-    # pulseaudio.extraConfig = "load-module module-loopback latency_msec=1";
+    pulseaudio.extraConfig  = ''
+      # load-module module-loopback latency_msec=1
+      load-module module-alsa-sink device="hdmi:CARD=HDMI,DEV=0" sink_name=HDMI0Right
+      load-module module-alsa-sink device="hdmi:CARD=HDMI,DEV=3" sink_name=HDMI3Bottom
+      load-module module-alsa-sink device="hdmi:CARD=HDMI,DEV=4" sink_name=HDMI4Top
+      load-module module-alsa-sink device="hdmi:CARD=HDMI,DEV=5" sink_name=HDMI5Left
+      load-module module-alsa-sink device="front:CARD=Generic,DEV=0" sink_name=Headphones
+      load-module module-combine-sink sink_name=AllHDMI slaves=HDMI0Right,HDMI3Bottom,HDMI4Top,HDMI5Left
+      load-module module-combine-sink sink_name=AllOutputs slaves=AllHDMI,Headphones
+    '';
 
     opengl = {
       enable          = true;
@@ -41,11 +50,19 @@
     ratbagd.enable = true;
   };
 
+  virtualisation.libvirtd.enable = true;
+  programs.dconf.enable = true;
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "qtwebkit-5.212.0-alpha4"
+  ];
+
   environment.shellInit      = "export GTK_DATA_PREFIX=${config.system.path}";
   environment.systemPackages = with pkgs; [
+    virt-manager
     mesa vulkan-tools vulkan-loader vulkan-headers
 
-    parted tree lshw vim htop 
+    parted tree lshw vim htop usbutils
     wget curl killall git pciutils
 
     gnome.gdm

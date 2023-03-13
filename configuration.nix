@@ -1,7 +1,7 @@
 { config, pkgs, modulesPath, ... }:
 
 {
-  imports = [ 
+  imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
 
     ./modules/filesystems.nix
@@ -11,16 +11,26 @@
     ./modules/certificates.nix
     ./modules/environment.nix
     ./modules/fonts.nix
-    /etc/nixos/obsidian
+    #/etc/nixos/obsidian
     #(./. + "./obsidian")
   ];
 
   nixpkgs.config.allowUnfree = true;
-  nix.autoOptimiseStore      = true;
-  nix.binaryCaches           = [ "https://nixcache.reflex-frp.org" ];
-  nix.binaryCachePublicKeys  = [ "ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NWI=" ];
   nix.package                = pkgs.nixUnstable;
-  nix.extraOptions           = "experimental-features = nix-command flakes";
+
+  nix.settings = {
+    substituters        = [ "https://nixcache.reflex-frp.org" ];
+    trusted-public-keys = [ "ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NWI=" ];
+    trusted-users       = [ "root" "@wheel" ];
+    auto-optimise-store  = true;
+  };
+
+  nix.extraOptions           = ''
+    experimental-features = nix-command flakes
+    connect-timeout = 1
+    download-attempts = 3
+    fallback = true
+  '';
 
   system = {
     stateVersion            = "21.05";

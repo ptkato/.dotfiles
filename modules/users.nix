@@ -7,6 +7,7 @@
   '';
 
   programs = {
+    adb.enable                = false;
     vim.defaultEditor         = true;
     bash.interactiveShellInit = ''
       powerline-daemon -q
@@ -20,7 +21,7 @@
   users.users.ptkato = {
     isNormalUser   = true;
     hashedPassword = "$6$fEtvYS02Dj3m980u$CH86PFq2/NqN3kvz0tfTOQmy8ZeslK71EeES3YCPSlUQaj9sQjA1eUqfUFhMo0eXHQUeg457q5cIv3dee1PnA0";
-    extraGroups    = [ "wheel" "networkmanager" ];
+    extraGroups    = [ "wheel" "networkmanager" "docker" "adbusers" "libvirtd"];
 
     packages = with pkgs; [
       firefox chromium
@@ -29,22 +30,21 @@
       transmission-gtk
 
       steam lutris spotify
-      steam-run
+      steam-run obs-studio
       wineWowPackages.staging
       protontricks winetricks
 
       gimp libreoffice
       ffmpeg libratbag piper
-      pavucontrol audacity
-      kitty powerline via
+      pavucontrol paprefs audacity
+      kitty python39Packages.powerline via
       gnome-latex mendeley
       postgresql ventoy-bin
+      docker zlib rar fuse
 
       haskell-language-server
-      haskell.compiler.ghc8107
+      haskellPackages.ghcup
       haskellPackages.cabal2nix
-      haskellPackages.cabal-install
-      haskellPackages.zlib
       haskellPackages.happy
       haskellPackages.alex
 
@@ -59,13 +59,21 @@
       name        = "vim";
       vimrcConfig = {
         packages.myplugins.opt   = [];
-        packages.myplugins.start = [ 
+        packages.myplugins.start = [
           vimPlugins.vim-airline
           vimPlugins.vim-airline-themes
           vimPlugins.vim-fugitive
         ];
 
         customRC = ''
+          function! NoTrailing()
+            let l = line(".")
+            let c = col(".")
+            %s/\s\+$//e
+            call cursor(l, c)
+          endfun
+
+          autocmd BufWritePre * :call NoTrailing()
           set backspace=indent,eol,start
 
           set tabstop=2

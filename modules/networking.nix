@@ -11,8 +11,8 @@
 
     hostName = "ptkato-desktop";
     hostId   = "13d3cba0";
-    
+
     useDHCP                   = false;
-    interfaces.enp4s0.useDHCP = true;
+    interfaces.enp5s0.useDHCP = true;
   };
 }
