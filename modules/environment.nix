@@ -20,19 +20,17 @@
 
   sound.enable = true;
   hardware = {
-    pulseaudio.enable       = true;
-    pulseaudio.support32Bit = true;
-    pulseaudio.package      = pkgs.pulseaudioFull;
-    pulseaudio.extraConfig  = ''
-      # load-module module-loopback latency_msec=1
-      load-module module-alsa-sink device="hdmi:CARD=HDMI,DEV=0" sink_name=HDMI0Right
-      load-module module-alsa-sink device="hdmi:CARD=HDMI,DEV=3" sink_name=HDMI3Bottom
-      load-module module-alsa-sink device="hdmi:CARD=HDMI,DEV=4" sink_name=HDMI4Top
-      load-module module-alsa-sink device="hdmi:CARD=HDMI,DEV=5" sink_name=HDMI5Left
-      load-module module-alsa-sink device="front:CARD=Generic,DEV=0" sink_name=Headphones
-      load-module module-combine-sink sink_name=AllHDMI slaves=HDMI0Right,HDMI3Bottom,HDMI4Top,HDMI5Left
-      load-module module-combine-sink sink_name=AllOutputs slaves=AllHDMI,Headphones
-    '';
+    pulseaudio.enable       = false;
+    # pulseaudio.support32Bit = true;
+    # pulseaudio.package      = pkgs.pulseaudioFull;
+    # pulseaudio.extraConfig  = ''
+    #  # load-module module-loopback latency_msec=1
+    #  .ifexists module-echo-cancel.so
+    #    load-module module-echo-cancel aec_method=webrtc source_name=echocancel sink_name=echocancel1 aec_args="analog_gain_control=0 digital_gain_control=0"
+    #    set-default-source echocancel
+    #    set-default-sink echocancel1
+    #  .endif
+    # '';
 
     opengl = {
       enable          = true;
@@ -44,8 +42,15 @@
   };
 
   services = {
-    # pipewire.media-session.enable = true;
-    # pipewire.wireplumber.enable   = false;
+    pipewire = {
+      enable               = true;
+      alsa.enable          = true;
+      alsa.support32Bit    = true;
+      pulse.enable         = true;
+      jack.enable          = true;
+      # media-session.enable = true;
+      # wireplumber.enable   = false;
+    };
 
     ratbagd.enable = true;
   };
@@ -58,12 +63,16 @@
   ];
 
   environment.shellInit      = "export GTK_DATA_PREFIX=${config.system.path}";
+  environment.pathsToLink    = [
+    "share/thumbnailers"
+  ];
   environment.systemPackages = with pkgs; [
     virt-manager
     mesa vulkan-tools vulkan-loader vulkan-headers
 
     parted tree lshw vim htop usbutils
     wget curl killall git pciutils
+    easyeffects pulseaudio
 
     gnome.gdm
     gnome.gnome-shell
@@ -76,6 +85,7 @@
     gnome.gnome-weather
     gnome.gnome-tweaks
     gnome.nautilus
+    gnome.evince
     gnome.eog
 
     gnomeExtensions.tray-icons-reloaded

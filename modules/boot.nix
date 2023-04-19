@@ -8,8 +8,10 @@
     kernelModules  = [ "kvm-amd" ];
     kernelParams   = [ "nohibernate" ];
 
+    extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
+
     initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "sd_mod" ];
-    initrd.kernelModules          = [ "amdgpu" ];
+    initrd.kernelModules          = [ "amdgpu" "v4l2loopback" ];
 
     supportedFilesystems = [ "ntfs" ];
   };

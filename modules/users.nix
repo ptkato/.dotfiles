@@ -39,11 +39,15 @@
       pavucontrol paprefs audacity
       kitty python39Packages.powerline via
       gnome-latex mendeley
-      postgresql ventoy-bin
+      postgresql ventoy
       docker zlib rar fuse
 
+      binutils gcc
+
       haskell-language-server
-      haskellPackages.ghcup
+      #haskellPackages.ghcup
+      haskellPackages.cabal-install
+      haskell.compiler.ghc8107Binary
       haskellPackages.cabal2nix
       haskellPackages.happy
       haskellPackages.alex
