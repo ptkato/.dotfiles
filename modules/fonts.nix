@@ -1,9 +1,9 @@
 { config, pkgs, ... }:
 
 {
-  fonts.enableDefaultFonts = true;
+  fonts.enableDefaultPackages = true;
   # fonts.fontDir.enable = true;
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     corefonts
     noto-fonts
     noto-fonts-cjk

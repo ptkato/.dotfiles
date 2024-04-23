@@ -25,7 +25,7 @@
 
     packages = with pkgs; [
       firefox chromium
-      discord element-desktop
+      discord vesktop element-desktop
       signal-desktop zoom-us
       transmission-gtk
 
@@ -33,13 +33,15 @@
       steam-run obs-studio
       wineWowPackages.staging
       protontricks winetricks
+      chatterino2
 
       gimp libreoffice
       ffmpeg libratbag piper
-      pavucontrol paprefs audacity
+      pavucontrol paprefs
+      vlc audacity davinci-resolve
       kitty python39Packages.powerline via
       gnome-latex mendeley
-      postgresql ventoy
+      postgresql ventoy-full
       docker zlib rar fuse
 
       binutils gcc
@@ -51,10 +53,16 @@
       haskellPackages.cabal2nix
       haskellPackages.happy
       haskellPackages.alex
+      haskellPackages.stack
+      #haskellPackages.hsx
+      ihp-new
+
+      rustc cargo
 
     ] ++ [ (vscode-with-extensions.override {
       vscodeExtensions = [
         vscode-extensions.jnoortheen.nix-ide
+        vscode-extensions.arrterian.nix-env-selector
         vscode-extensions.justusadam.language-haskell
         vscode-extensions.haskell.haskell
         vscode-extensions.eamodio.gitlens

@@ -38,7 +38,53 @@
       package32       = pkgs.pkgsi686Linux.mesa.drivers;
       driSupport      = true;
       driSupport32Bit = true;
+      extraPackages   = with pkgs; [
+        rocm-opencl-icd
+        rocm-opencl-runtime
+      ];
     };
+
+    bluetooth = {
+      enable  = true;
+      package = pkgs.bluez;
+    };
+
+    logitech.wireless = {
+      enable = true;
+      enableGraphical = true;
+    };
+  };
+
+  programs.gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-gnome3;
+      enableSSHSupport = true;
+  };
+
+  programs.corectrl = {
+    enable = true;
+    gpuOverclock.enable = true;
+    gpuOverclock.ppfeaturemask = "0xffffffff";
+  };
+
+  programs.java = {
+    enable = true;
+    package = pkgs.jetbrains.jdk;
+  };
+
+  security.polkit = {
+    enable = true;
+    extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        if ((action.id == "org.corectrl.helper.init" ||
+             action.id == "org.corectrl.helperkiller.init") &&
+          subject.local == true &&
+          subject.active == true &&
+          subject.isInGroup("your-user-group")) {
+            return polkit.Result.YES;
+        }
+      });
+    '';
   };
 
   services = {
@@ -73,6 +119,8 @@
     parted tree lshw vim htop usbutils
     wget curl killall git pciutils
     easyeffects pulseaudio
+    libratbag piper corectrl
+    gnupg pinentry-gnome3
 
     gnome.gdm
     gnome.gnome-shell
@@ -89,5 +137,6 @@
     gnome.eog
 
     gnomeExtensions.tray-icons-reloaded
+    gnomeExtensions.appindicator
   ];
 }
