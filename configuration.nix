@@ -16,7 +16,7 @@
   ];
 
   nixpkgs.config.allowUnfree = true;
-  nix.package                = pkgs.nixUnstable;
+  nix.package                = pkgs.nixVersions.latest;
 
   nix.settings = {
     substituters        = [ "https://nixcache.reflex-frp.org" ];

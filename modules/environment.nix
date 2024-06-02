@@ -10,7 +10,7 @@
     displayManager.gdm.autoSuspend = false;
     desktopManager.gnome.enable    = true;
 
-    layout = "br";
+    xkb.layout = "br";
     # libintput.enable = true;
   };
 
@@ -92,10 +92,18 @@
       enable               = true;
       alsa.enable          = true;
       alsa.support32Bit    = true;
-      pulse.enable         = true;
+      pulse.enable         = false;
       jack.enable          = true;
-      # media-session.enable = true;
-      # wireplumber.enable   = false;
+      wireplumber.enable   = true;
+      extraConfig.pipewire."92-low-latency" = {
+        "context.properties" = {
+          "default.clock.rate" = 44100;
+          "default.clock.allowed-rates" = [ 44100 48000 88200 96000 ];
+          "default.clock.quantum" = 2048;
+          "default.clock.min-quantum" = 1024;
+          # "default.clock.max-quantum" = 2048;
+        };
+      };
     };
 
     ratbagd.enable = true;
@@ -118,9 +126,10 @@
 
     parted tree lshw vim htop usbutils
     wget curl killall git pciutils
-    easyeffects pulseaudio
+    easyeffects pwvucontrol
     libratbag piper corectrl
     gnupg pinentry-gnome3
+    v4l-utils
 
     gnome.gdm
     gnome.gnome-shell
