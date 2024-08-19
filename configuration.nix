@@ -1,4 +1,4 @@
-{ config, pkgs, modulesPath, ... }:
+{ config, pkgs, nixos-unstable, nixpkgs-unstable, modulesPath, ... }:
 
 {
   imports = [
@@ -11,8 +11,8 @@
     ./modules/certificates.nix
     ./modules/environment.nix
     ./modules/fonts.nix
-    #/etc/nixos/obsidian
-    #(./. + "./obsidian")
+    # /etc/nixos/obsidian
+    # (./. + "./obsidian")
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -22,7 +22,7 @@
     substituters        = [ "https://nixcache.reflex-frp.org" ];
     trusted-public-keys = [ "ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NWI=" ];
     trusted-users       = [ "root" "@wheel" ];
-    auto-optimise-store  = true;
+    auto-optimise-store = true;
   };
 
   nix.extraOptions           = ''

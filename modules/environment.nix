@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixos-unstable, nixpkgs-unstable, ... }:
 
 {
   services.xserver = {
@@ -6,19 +6,22 @@
     enable       = true;
     autorun      = true;
 
-    displayManager.gdm.enable      = true;
-    displayManager.gdm.autoSuspend = false;
-    desktopManager.gnome.enable    = true;
+    # displayManager.gdm.enable      = true;
+    # displayManager.gdm.autoSuspend = false;
+    # desktopManager.gnome.enable    = true;
 
     xkb.layout = "br";
     # libintput.enable = true;
   };
 
+  services.displayManager.defaultSession = "plasma";
+  services.displayManager.sddm.enable = true;
+  services.desktopManager.plasma6.enable = true;
+
   console.useXkbConfig = true;
   i18n.defaultLocale   = "en_US.UTF-8";
   time.timeZone        = "America/Sao_Paulo";
 
-  sound.enable = true;
   hardware = {
     pulseaudio.enable       = false;
     # pulseaudio.support32Bit = true;
@@ -32,12 +35,11 @@
     #  .endif
     # '';
 
-    opengl = {
+    graphics = {
       enable          = true;
+      enable32Bit     = true;
       package         = pkgs.mesa.drivers;
       package32       = pkgs.pkgsi686Linux.mesa.drivers;
-      driSupport      = true;
-      driSupport32Bit = true;
       extraPackages   = with pkgs; [
         rocm-opencl-icd
         rocm-opencl-runtime
@@ -57,7 +59,7 @@
 
   programs.gnupg.agent = {
       enable = true;
-      pinentryPackage = pkgs.pinentry-gnome3;
+      pinentryPackage = pkgs.pinentry-qt; # pinentry-gnome3;
       enableSSHSupport = true;
   };
 
@@ -92,7 +94,7 @@
       enable               = true;
       alsa.enable          = true;
       alsa.support32Bit    = true;
-      pulse.enable         = false;
+      pulse.enable         = true;
       jack.enable          = true;
       wireplumber.enable   = true;
       extraConfig.pipewire."92-low-latency" = {
@@ -124,28 +126,32 @@
     virt-manager
     mesa vulkan-tools vulkan-loader vulkan-headers
 
+    (pkgs.callPackage ./../extra/VK_hdr_layer.nix { })
+
     parted tree lshw vim htop usbutils
     wget curl killall git pciutils
-    easyeffects pwvucontrol
+    (easyeffects.override {deepfilternet = nixpkgs-unstable.deepfilternet;}) pwvucontrol
     libratbag piper corectrl
-    gnupg pinentry-gnome3
-    v4l-utils
+    gnupg pinentry-qt # pinentry-gnome3
+    v4l-utils jstest-gtk
 
-    gnome.gdm
-    gnome.gnome-shell
-    gnome.gnome-session
+    # gnome.gdm
+    # gnome.gnome-shell
+    # gnome.gnome-session
+    # gnome.gnome-weather
 
-    gnome.gvfs
-    gnome.dconf-editor
-    gnome.adwaita-icon-theme
-    gnome.gnome-screenshot
-    gnome.gnome-weather
-    gnome.gnome-tweaks
-    gnome.nautilus
-    gnome.evince
-    gnome.eog
+    gvfs
+    dconf-editor
+    adwaita-icon-theme
+    # gnome-screenshot
+    # gnome-tweaks
+    # nautilus
+    # evince
+    # eog
 
-    gnomeExtensions.tray-icons-reloaded
-    gnomeExtensions.appindicator
+    # gnomeExtensions.tray-icons-reloaded
+    # gnomeExtensions.appindicator
+    # gnomeExtensions.smart-auto-move
+    # gnomeExtensions.just-perfection
   ];
 }

@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  services.dnsmasq.extraConfig = "cache-size=1000";
+
   networking = {
     firewall.enable       = false;
     wireless.enable       = false;

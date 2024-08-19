@@ -8,6 +8,7 @@
 
   programs = {
     adb.enable                = false;
+    vim.enable                = true;
     vim.defaultEditor         = true;
     bash.interactiveShellInit = ''
       powerline-daemon -q
@@ -15,7 +16,23 @@
       POWERLINE_BASH_SELECT=1
       . /etc/profiles/per-user/ptkato/share/bash/powerline.sh
     '';
+
+    gamescope.capSysNice = true;
+
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+      gamescopeSession.enable = true;
+      package = pkgs.steam.override {
+        extraPkgs = pkgs: with pkgs; [
+          gamescope-wsi
+          libkrb5 keyutils
+        ];
+      };
+    };
   };
+
 
   users.mutableUsers = false;
   users.users.ptkato = {
@@ -27,20 +44,21 @@
       firefox chromium
       discord vesktop element-desktop
       signal-desktop zoom-us
-      transmission-gtk
+      transmission_4-qt # transmission_4-gtk
 
-      steam lutris spotify
+      # (let hackedPkgs = pkgs.extend (final: prev: { buildFHSEnv = args: prev.buildFHSEnv (args // { extraBwrapArgs = (args.extraBwrapArgs or []) ++ [ "--cap-add ALL" ]; }); }); in hackedPkgs.lutris)
+      lutris spotify
       steam-run obs-studio
       wineWowPackages.staging
       protontricks winetricks
-      chatterino2
+      streamlink-twitch-gui-bin
+      streamlink chatterino2
 
       gimp libreoffice
       ffmpeg libratbag piper
-      pavucontrol paprefs
-      vlc audacity davinci-resolve
+      vlc audacity
       kitty python39Packages.powerline via
-      gnome-latex mendeley
+      mendeley # gnome-latex
       postgresql ventoy-full
       docker zlib rar fuse
 
@@ -66,6 +84,7 @@
         vscode-extensions.justusadam.language-haskell
         vscode-extensions.haskell.haskell
         vscode-extensions.eamodio.gitlens
+        vscode-extensions.tomoki1207.pdf
       ];
     })] ++ [ nodejs (vimHugeX.customize {
       name        = "vim";
