@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixos-unstable, nixpkgs-unstable, nixpkgs-pinned, ... }:
 
 {
   security.sudo.configFile = ''
@@ -26,7 +26,7 @@
       gamescopeSession.enable = true;
       package = pkgs.steam.override {
         extraPkgs = pkgs: with pkgs; [
-          gamescope-wsi
+          nixpkgs-pinned.gamescope-wsi
           libkrb5 keyutils
         ];
       };
@@ -42,12 +42,14 @@
 
     packages = with pkgs; [
       firefox chromium
-      discord vesktop element-desktop
+      (discord.override { withVencord = true; })
+      arrpc nixpkgs-pinned.element-desktop
       signal-desktop zoom-us
       transmission_4-qt # transmission_4-gtk
 
       # (let hackedPkgs = pkgs.extend (final: prev: { buildFHSEnv = args: prev.buildFHSEnv (args // { extraBwrapArgs = (args.extraBwrapArgs or []) ++ [ "--cap-add ALL" ]; }); }); in hackedPkgs.lutris)
       lutris spotify
+      nexusmods-app-unfree
       steam-run obs-studio
       wineWowPackages.staging
       protontricks winetricks

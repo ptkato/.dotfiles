@@ -129,7 +129,7 @@
     (pkgs.callPackage ./../extra/VK_hdr_layer.nix { })
 
     parted tree lshw vim htop usbutils
-    wget curl killall git pciutils
+    wget curl killall git pciutils gdb
     (easyeffects.override {deepfilternet = nixpkgs-unstable.deepfilternet;}) pwvucontrol
     libratbag piper corectrl
     gnupg pinentry-qt # pinentry-gnome3
