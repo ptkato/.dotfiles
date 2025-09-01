@@ -4,7 +4,8 @@
   hardware.cpu.amd.updateMicrocode = config.hardware.enableRedistributableFirmware;
 
   boot = {
-    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    # kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    kernelPackages = pkgs.linuxPackages_6_12;
     kernelModules  = [ "kvm-amd" ];
     kernelParams   = [ "nohibernate" ];
 

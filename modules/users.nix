@@ -50,6 +50,7 @@
       # (let hackedPkgs = pkgs.extend (final: prev: { buildFHSEnv = args: prev.buildFHSEnv (args // { extraBwrapArgs = (args.extraBwrapArgs or []) ++ [ "--cap-add ALL" ]; }); }); in hackedPkgs.lutris)
       lutris spotify
       nexusmods-app-unfree
+      prismlauncher
       steam-run obs-studio
       wineWowPackages.staging
       protontricks winetricks
@@ -59,12 +60,13 @@
       gimp libreoffice
       ffmpeg libratbag piper
       vlc audacity
-      kitty python39Packages.powerline via
+      kitty powerline via
       mendeley # gnome-latex
-      postgresql ventoy-full
+      postgresql # ventoy-full
       docker zlib rar fuse
 
       binutils gcc
+      lmstudio
 
       haskell-language-server
       #haskellPackages.ghcup
@@ -81,6 +83,9 @@
 
     ] ++ [ (vscode-with-extensions.override {
       vscodeExtensions = [
+        #vscode-extensions.ms-dotnettools.vscode-dotnet-runtime
+        #vscode-extensions.ms-dotnettools.csharp
+        #vscode-extensions.ms-dotnettools.csdevkit
         vscode-extensions.jnoortheen.nix-ide
         vscode-extensions.arrterian.nix-env-selector
         vscode-extensions.justusadam.language-haskell

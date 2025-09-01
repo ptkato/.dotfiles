@@ -1,6 +1,10 @@
 { config, pkgs, nixos-unstable, nixpkgs-unstable, ... }:
 
 {
+  services.hardware.openrgb = {
+    enable = true;
+  };
+
   services.xserver = {
     videoDrivers = [ "amdgpu" ];
     enable       = true;
@@ -20,10 +24,14 @@
 
   console.useXkbConfig = true;
   i18n.defaultLocale   = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_TELEPHONE = "pt_BR.UTF-8";
+    LC_MEASUREMENT = "pt_BR.UTF-8";
+    LC_ALL = "en_US.UTF-8";
+  };
   time.timeZone        = "America/Sao_Paulo";
 
-  hardware = {
-    pulseaudio.enable       = false;
+  services.pulseaudio.enable       = false;
     # pulseaudio.support32Bit = true;
     # pulseaudio.package      = pkgs.pulseaudioFull;
     # pulseaudio.extraConfig  = ''
@@ -35,15 +43,16 @@
     #  .endif
     # '';
 
+  hardware = {
     graphics = {
       enable          = true;
       enable32Bit     = true;
-      package         = pkgs.mesa.drivers;
-      package32       = pkgs.pkgsi686Linux.mesa.drivers;
-      extraPackages   = with pkgs; [
-        rocm-opencl-icd
-        rocm-opencl-runtime
-      ];
+      package         = pkgs.mesa;
+      package32       = pkgs.pkgsi686Linux.mesa;
+      # extraPackages   = with pkgs; [
+      #   rocm-opencl-icd
+      #   rocm-opencl-runtime
+      # ];
     };
 
     bluetooth = {
@@ -65,9 +74,10 @@
 
   programs.corectrl = {
     enable = true;
-    gpuOverclock.enable = true;
-    gpuOverclock.ppfeaturemask = "0xffffffff";
   };
+
+  hardware.amdgpu.overdrive.ppfeaturemask = "0xffffffff";
+  hardware.amdgpu.overdrive.enable = true;
 
   programs.java = {
     enable = true;
@@ -134,6 +144,8 @@
     libratbag piper corectrl
     gnupg pinentry-qt # pinentry-gnome3
     v4l-utils jstest-gtk
+
+    kdePackages.kcalc
 
     # gnome.gdm
     # gnome.gnome-shell
